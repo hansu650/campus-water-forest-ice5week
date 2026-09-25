@@ -1,0 +1,19 @@
+{
+  "clown_sailor": "fish-clown-sailor-v3.webp",
+  "clown_scarf": "fish-clown-scarf-v3.webp",
+  "gold_sailor": "fish-gold-sailor-v3.webp",
+  "gold_scarf": "fish-gold-scarf-v3.webp",
+  "blue_sailor": "fish-blue-sailor-v3.webp",
+  "blue_scarf": "fish-blue-scarf-v3.webp",
+  "fish": "fish-clown-idle-display-v3.webp",
+  "fishEat": "fish-clown-eat-display-v3.webp",
+  "fishReact": "fish-clown-react-display-v3.webp",
+  "goldfish": "fish-gold-transparent-display-v3.webp",
+  "bluefish": "fish-blue-transparent-display-v3.webp",
+  "aerial": "team-campus-night-display-v3.webp",
+  "walkway": "team-campus-walk-display-v3.webp",
+  "treeA01": "team-tree-a01-display-v3.webp",
+  "treeA02": "team-tree-a02-display-v3.webp",
+  "treeA03": "team-tree-a03-display-v3.webp",
+  "treePlaque": "team-tree-a01-blank-plaque-v4.webp"
+}

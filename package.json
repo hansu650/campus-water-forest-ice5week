@@ -1,0 +1,12 @@
+{
+  "name": "campus-water-forest-ice5week",
+  "version": "0.5.1",
+  "private": true,
+  "description": "滴水成林 / Campus Reef — ICE week 5 campus sustainability game prototype",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node tests/core.test.cjs",
+    "build": "node scripts/build.cjs",
+    "start": "node scripts/serve.cjs"
+  }
+}
