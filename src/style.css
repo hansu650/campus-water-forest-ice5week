@@ -14,3 +14,75 @@ h1,h2,h3,.play,.collect>b{font-family:'Fredoka','Microsoft YaHei',sans-serif;fon
 @media(max-height:520px){.sheet{max-height:92dvh}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}#pet{will-change:auto}}
 @media(min-width:371px) and (max-width:620px){.world-label{left:50%;bottom:168px;transform:translateX(-50%);text-align:center;white-space:nowrap}}
+
+/* Let the pond fill the screen while keeping visible entrances to its controls. */
+.edge-zone {
+  position: absolute;
+  left: 50%;
+  width: min(430px, calc(100% - 20px));
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+.edge-top { top: max(8px, env(safe-area-inset-top)); padding-top: 31px; }
+.edge-bottom { bottom: max(8px, env(safe-area-inset-bottom)); padding-bottom: 31px; }
+.edge-panel { position: relative; left: auto; top: auto; bottom: auto; width: 100%; transform: none; transition: opacity .22s, translate .28s ease; }
+.edge-handle {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  min-width: 114px; min-height: 28px; padding: 4px 14px;
+  border-radius: 22px; background: #254a53b8; backdrop-filter: blur(8px);
+  color: #e8f8f4; box-shadow: inset 0 1px #ffffff22; font-size: 11px;
+}
+.edge-handle:active { transform: translateX(-50%); }
+.edge-handle .icon { width: 13px; height: 13px; }
+.edge-top .edge-handle { top: 0; }
+.edge-bottom .edge-handle { bottom: 0; }
+.edge-zone[data-expanded="false"] .edge-panel { opacity: 0; pointer-events: none; visibility: hidden; }
+.edge-top[data-expanded="false"] .edge-panel { translate: 0 -35px; }
+.edge-bottom[data-expanded="false"] .edge-panel { translate: 0 35px; }
+.edge-zone[data-expanded="true"] { pointer-events: auto; }
+.edge-zone[data-expanded="true"] .edge-panel { visibility: visible; opacity: 1; translate: 0 0; }
+#interface .edge-zone[data-expanded="false"] .edge-panel button { pointer-events: none; }
+.edge-zone[data-expanded="true"] .edge-handle { background: #254a53ec; }
+#controls-toggle[aria-pressed="true"] { background: #3c897e; }
+#pond-companions { position: absolute; inset: 0; pointer-events: none; }
+.pond-fish { position: absolute; transform: translate(-50%, -50%); opacity: .91; filter: drop-shadow(0 4px 3px #163d401d); }
+.pond-fish img { width: 100%; height: 100%; object-fit: contain; animation: fin 4.7s ease-in-out infinite; }
+.baby-fish { opacity: 1; filter: drop-shadow(0 3px 4px #ebffc544); }
+#pet { z-index: 2; }
+#pet-image { transition: scale .35s; }
+.world-label #pond-population { opacity: .95; font-size: 11px; letter-spacing: .2px; }
+.nursery-card { border: 1px solid #82c9b739; border-radius: 20px; background: linear-gradient(140deg, #315750, #203d44); padding: 18px; margin: 12px 0; }
+.nursery-fish { display: flex; justify-content: center; align-items: flex-end; min-height: 105px; }
+.nursery-fish img { width: 135px; height: 105px; object-fit: contain; }
+.nursery-fish .nursery-baby { width: 58px; height: 48px; margin: 0 10px 8px; }
+.nursery-card h3 { margin: 10px 0 6px; }
+.nursery-card p { margin: 6px 0 12px; }
+.nursery-meta { display: flex; justify-content: space-between; font-size: 12px; margin: 12px 0 8px; color: #c7e6dd; }
+.companion-note { display: flex; align-items: center; gap: 10px; padding: 12px 0; }
+.companion-note span { flex: 1; color: var(--muted); font-size: 12px; }
+.care-hint { font-size: 12px; color: #bad6cc; margin: 3px 0 14px; }
+@media(max-width:750px) {
+  .corner-controls { top: 12px; right: 9px; flex-direction: column; }
+  .edge-zone { width: min(430px, calc(100% - 20px)); }
+  .world-label { left: 13px; bottom: 50px; transform: none; text-align: left; }
+}
+@media(max-width:480px) {
+  .edge-top { padding-top: 42px; }
+  .corner-controls { top: 8px; right: 8px; flex-direction: row; gap: 3px; }
+  .mini-pill { min-width: 28px; padding: 6px; min-height: 28px; font-size: 10px; }
+  .mini-pill .icon { width: 14px; height: 14px; }
+  .edge-top .edge-handle { left: 2px; transform: none; min-width: 105px; }
+  .edge-top .edge-handle:active { transform: none; }
+}
+@media(max-height:520px) {
+  .edge-zone { width: min(410px, calc(100% - 20px)); }
+  .edge-handle { min-height: 24px; }
+  .edge-top { padding-top: 28px; }
+  .edge-bottom { padding-bottom: 27px; }
+  .world-label { bottom: 38px; }
+}
+
+@media(max-width:370px){.world-label{display:flex;font-size:10px;bottom:44px}.world-label>span[data-t="localDemo"]{display:none}}
+
+@media(min-width:651px){.sheet[data-panel=wardrobe]{width:680px}.fish-catalog{grid-template-columns:repeat(3,1fr)}}

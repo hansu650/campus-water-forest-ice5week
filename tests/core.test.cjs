@@ -233,3 +233,88 @@ test('RULE-17: full reset clears names and outfits but retains the selected lang
   assert.equal(reset.food, 3);
   assert.equal(C.points(reset), 80);
 });
+
+test('RULE-18: all six species and their outfits survive a save round-trip', () => {
+  assert.equal(C.species.length, 6);
+  for (const fishType of C.species) for (const fishWear of ['none', 'sailor', 'scarf']) {
+    const state = C.sanitize({ fishType, fishWear, petChosen: true });
+    const restored = C.sanitize(JSON.parse(JSON.stringify(state)));
+    assert.equal(restored.fishType, fishType);
+    assert.equal(restored.fishWear, fishWear);
+  }
+});
+
+test('RULE-19: level growth is visible, bounded and separate from sample points', () => {
+  const state = C.fresh();
+  assert.equal(C.growthScale(state), 1);
+  state.feeds = 3;
+  assert.equal(C.level(state), 2);
+  assert.equal(C.growthScale(state), 1.08);
+  state.feeds = 8;
+  assert.equal(C.level(state), 3);
+  assert.equal(C.growthScale(state), 1.16);
+  state.feeds = 100000;
+  assert.equal(C.growthScale(state), 1.24);
+  assert.equal(C.points(state), 80);
+});
+
+test('RULE-20: normal earned food reaches the baby milestone after eight feeds', () => {
+  const state = C.fresh();
+  C.claimFood(state);
+  C.award(state, 'photo');
+  C.award(state, 'water');
+  assert.equal(state.food, 9);
+  for (let feed = 0; feed < 7; feed++) assert.equal(C.feed(state), true);
+  const before = structuredClone(state);
+  assert.equal(C.welcomeBaby(state), false);
+  assert.deepEqual(state, before);
+  C.feed(state);
+  assert.equal(C.level(state), 3);
+  assert.equal(C.welcomeBaby(state), true);
+  assert.equal(state.babyType, 'clown');
+  assert.equal(state.food, 1);
+  assert.equal(C.points(state), 80);
+  const welcomed = structuredClone(state);
+  assert.equal(C.welcomeBaby(state), false);
+  assert.deepEqual(state, welcomed);
+});
+
+test('RULE-21: offspring retains its birth species across parent changes and reloads', () => {
+  const state = C.sanitize({ feeds: 8, fishType: 'angel' });
+  assert.equal(C.welcomeBaby(state), true);
+  state.fishType = 'tetra';
+  const restored = C.sanitize(JSON.parse(JSON.stringify(state)));
+  assert.equal(restored.fishType, 'tetra');
+  assert.equal(restored.babyType, 'angel');
+  assert.equal(C.welcomeBaby(restored), false);
+  assert.equal(C.sanitize({ feeds: 7, babyType: 'angel' }).babyType, null);
+  assert.equal(C.sanitize({ feeds: 8, babyType: 'shark' }).babyType, null);
+});
+
+test('RULE-22: restarting clears the family milestone while preserving chosen preferences', () => {
+  const state = C.sanitize({ feeds: 8, babyType: 'tang', fishType: 'tang',
+    companions: false, controlsPinned: true });
+  const restart = C.reset(state, false);
+  assert.equal(restart.babyType, null);
+  assert.equal(restart.feeds, 0);
+  assert.equal(restart.fishType, 'tang');
+  assert.equal(restart.companions, false);
+  assert.equal(restart.controlsPinned, true);
+  const full = C.reset(state, true);
+  assert.equal(full.babyType, null);
+  assert.equal(full.companions, true);
+  assert.equal(full.controlsPinned, false);
+});
+
+test('RULE-23: older saves gain safe defaults for companions, controls and the nursery', () => {
+  const restored = C.sanitize({ food: 6, feeds: 2, collected: true, fishType: 'gold', lang: 'zh' });
+  assert.equal(restored.food, 6);
+  assert.equal(restored.feeds, 2);
+  assert.equal(C.points(restored), 100);
+  assert.equal(restored.fishType, 'gold');
+  assert.equal(restored.lang, 'zh');
+  assert.equal(restored.companions, true);
+  assert.equal(restored.controlsPinned, false);
+  assert.equal(restored.babyType, null);
+  assert.equal(C.sanitize({ companions: 'false', controlsPinned: 'true' }).controlsPinned, false);
+});

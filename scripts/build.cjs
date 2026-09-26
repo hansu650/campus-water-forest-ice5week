@@ -14,7 +14,7 @@ for(const family of ['Nunito','Fredoka']) {
   fontCSS+='@font-face{font-family:"'+family+'";font-style:normal;font-weight:300 900;font-display:swap;src:url(data:font/ttf;base64,'+font.toString('base64')+') format("truetype");}\n';
   fontLicenses+='\n'+family+' — Google Fonts\n'+license;
 }
-const modules={INLINE_CORE:'core.js',INLINE_SCENERY:'scenery.js',INLINE_APP:'app.js'};
+const modules={INLINE_CORE:'core.js',INLINE_SCENERY:'scenery.js',INLINE_LIFE:'pond-life.js',INLINE_CONTROLS:'edge-controls.js',INLINE_APP:'app.js'};
 const replacements={INLINE_STYLE:fontCSS+read(path.join(src,'style.css')),INLINE_ASSETS:JSON.stringify(assets)};
 for(const [marker,file] of Object.entries(modules)) {
   const code=read(path.join(src,file));new Function(code);replacements[marker]=code;

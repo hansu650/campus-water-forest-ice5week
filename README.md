@@ -4,15 +4,17 @@ An ICE Week 5 campus sustainability prototype: care for a fish, explore sample w
 
 **[Play Campus Reef](https://hansu650.github.io/campus-water-forest-ice5week/)**
 
-This is the first online version of an evolving class project. It supports desktop and mobile browsers without registration. New saves start in English; the language control also provides Chinese for local testing, and existing saves retain their selected language.
+This is an evolving class project. It supports desktop and mobile browsers without registration. New saves start in English; the language control also provides Chinese for local testing, and existing saves retain their selected language.
 
 ## Features
 
-- Choose from three fish, personalise their size and outfit, and feed them to earn growth points.
+- Choose from six fish, personalise their size and outfit, and feed them to earn growth points.
+- Share the scene with four labelled demo companions, or hide them in Together. These are local game characters.
+- Watch your fish grow with its level. At level 3, welcome one baby fish that keeps its own species and follows its parent.
 - Complete a campus photo puzzle and a pipe-connection challenge. Each first clear awards food and a badge.
 - Explore clearly labelled sample water records and collect a one-time sample green-points reward.
 - Preview your name and locally saved guardian names on a virtual campus tree plaque.
-- Follow the next-step task bar while plants, rocks and driftwood frame the pond.
+- Reveal the care controls and task bar by hovering near the top or bottom. Tap the handles on touchscreens, use Tab on a keyboard, or pin both toolbars with the top-right tank button.
 
 Progress is stored in the current browser using `localStorage`. Different devices and browsers have separate saves. The online site and a local HTML file also have separate saves. Clearing site data can remove progress; private browsing is not suitable for a lasting save.
 
@@ -36,11 +38,13 @@ Open `http://127.0.0.1:57863/`, or open the generated `dist/index.html` directly
 | `src/style.css` | Interface styles and responsive layout |
 | `src/core.js` | Game rules, rewards and saved-state validation |
 | `src/app.js` | English and Chinese interface text, interactions, sound and animation |
+| `src/pond-life.js` | Six-species catalog, demo companions and baby-fish movement |
+| `src/edge-controls.js` | Hover, touch and keyboard access to retractable toolbars |
 | `src/scenery.js` | Original canvas plants, driftwood, stones and sand |
 | `assets/` | Image mapping, game images, fonts and font licences |
 | `scripts/` | Dependency-free build and local preview |
-| `tests/core.test.cjs` | Seventeen game-rule and regression checks |
-| `tests/browser.test.cjs` | Ten real-browser scenarios, including reloads and mobile layouts |
+| `tests/core.test.cjs` | Twenty-three game-rule and regression checks |
+| `tests/browser.test.cjs` | Fifteen real-browser scenarios, including growth, reloads and touch controls |
 | `.github/workflows/pages.yml` | Automated checks, build and GitHub Pages deployment |
 
 For the test coverage, direct commands and optional existing Playwright runtime, see [Testing Campus Reef](docs/testing.md). Rule tests use only Node built-ins; the browser suite does not install packages.
@@ -51,7 +55,7 @@ A push to `main` runs the rule checks, builds the game and deploys it. Pull requ
 
 Water durations, fees and green points are demonstration data. The game is not connected to Quzhi Campus or a server database. Durations and fees do not directly measure litres saved. Tree plaques are composite previews, not evidence of physical installation, formal adoption or school approval. Guardian names are stored locally; co-care does not synchronise across devices.
 
-The public version includes approved campus scenery assets. Classroom portraits, original course materials, private bills and individual reflections remain outside this repository. Some fish assets were derived from photographs with AI-assisted background removal, poses or outfits. See [asset sources and licences](ASSET_CREDITS.md).
+The public version includes approved campus scenery assets. Classroom portraits, original course materials, private bills and individual reflections remain outside this repository. Three fish species use photo-derived assets with AI-assisted background removal, poses or outfits; three more use original vector illustrations created with coding assistance. See [asset sources and licences](ASSET_CREDITS.md).
 
 The interface takes layout inspiration from Reefy. The interface and water scene were independently implemented; no Reefy code or game assets were copied.
 

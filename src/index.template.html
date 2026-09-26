@@ -10,10 +10,12 @@
 <body>
 <main id="app">
   <canvas id="water" aria-hidden="true"></canvas>
-  <div id="fish-world"><button id="pet" aria-label="Say hello to your fish"><img id="pet-image" alt=""><span id="fish-speech" hidden></span></button></div>
+  <div id="fish-world"><div id="pond-companions"></div><button id="pet" aria-label="Say hello to your fish"><img id="pet-image" alt=""><span id="fish-speech" hidden></span></button></div>
   <div id="floating-reward" aria-live="polite" hidden></div>
   <div id="interface">
-    <header class="topbar">
+    <div id="care-zone" class="edge-zone edge-top" data-expanded="false">
+      <button id="care-toggle" class="edge-handle" aria-controls="care-panel" aria-expanded="false"><span data-icon="food"></span><span data-t="careControls">Care controls</span></button>
+    <header id="care-panel" class="topbar edge-panel">
       <div class="hud">
         <button class="pill" data-open="records"><b id="points">80</b><span class="coin">✦</span><span class="plus">+</span><span class="sr-only" data-t="greenPoints"></span></button>
         <button class="pill" data-open="food"><b id="food">3</b><span data-icon="food"></span><span class="plus">+</span><span class="sr-only" data-t="food"></span></button>
@@ -26,9 +28,12 @@
         <button id="collect" class="care collect"><b data-t="collect"></b><small id="collect-sub"></small></button>
       </div>
     </header>
-    <div class="corner-controls"><button id="language" class="mini-pill" aria-label="Switch to Chinese">ZH</button><button id="sound" class="mini-pill" aria-label="Turn sound off"></button></div>
-    <div class="world-label"><b data-t="brand"></b><span data-t="localDemo"></span></div>
-    <nav class="dock" aria-label="Game navigation">
+    </div>
+    <div class="corner-controls"><button id="language" class="mini-pill" aria-label="Switch to Chinese">ZH</button><button id="sound" class="mini-pill" aria-label="Turn sound off"></button><button id="controls-toggle" class="mini-pill" aria-label="Keep controls visible" aria-pressed="false"><span data-icon="tank"></span></button></div>
+    <div class="world-label"><b data-t="brand"></b><span data-t="localDemo"></span><span id="pond-population"></span></div>
+    <div id="navigation-zone" class="edge-zone edge-bottom" data-expanded="false">
+      <button id="navigation-toggle" class="edge-handle" aria-controls="navigation-panel" aria-expanded="false"><span data-icon="game"></span><span data-t="exploreControls">Explore & tasks</span></button>
+    <nav id="navigation-panel" class="dock edge-panel" aria-label="Game navigation">
       <button id="next-goal" class="next-goal"><span><b id="goal-title"></b><i class="goal-track"><i id="goal-progress"></i></i></span><span id="goal-reward"></span><span data-icon="chevron"></span></button>
       <div class="nav-items">
         <button data-tab="home" class="nav-item active" aria-current="page"><span data-icon="tank"></span><b data-t="aquarium"></b><small id="fish-count"></small></button>
@@ -38,6 +43,7 @@
         <button data-tab="profile" class="nav-item"><span data-icon="user"></span><b data-t="you"></b><small id="profile-level"></small></button>
       </div>
     </nav>
+    </div>
   </div>
   <div id="welcome" class="welcome">
     <section class="welcome-card" aria-labelledby="welcome-title">
@@ -61,6 +67,8 @@
 <script id="assets" type="application/json">/* INLINE_ASSETS */</script>
 <script>/* INLINE_CORE */</script>
 <script>/* INLINE_SCENERY */</script>
+<script>/* INLINE_LIFE */</script>
+<script>/* INLINE_CONTROLS */</script>
 <script>/* INLINE_APP */</script>
 </body>
 </html>

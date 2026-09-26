@@ -55,8 +55,8 @@ after(async () => {
   if (server) await new Promise(resolve => server.close(resolve));
 });
 
-async function openGame(t, { viewport = { width: 1280, height: 900 }, initialize } = {}) {
-  const context = await browser.newContext({ viewport, locale: 'en-GB', reducedMotion: 'reduce' });
+async function openGame(t, { viewport = { width: 1280, height: 900 }, initialize, pinControls = true, hasTouch = false } = {}) {
+  const context = await browser.newContext({ viewport, locale: 'en-GB', reducedMotion: 'reduce', hasTouch });
   const errors = [];
   const externalRequests = [];
   const page = await context.newPage();
@@ -77,6 +77,7 @@ async function openGame(t, { viewport = { width: 1280, height: 900 }, initialize
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await expect(page.locator('#welcome')).toBeHidden();
+  if (pinControls) await page.getByRole('button', { name: 'Keep controls visible', exact: true }).click();
   return page;
 }
 
@@ -133,10 +134,12 @@ test('UI-01: feed buttons spend food, stop at zero and grant trial supply only o
   t.diagnostic('Real clicks: food 3 -> 0 -> 2; empty feeding blocked; repeated supply disabled.');
 });
 
-test('UI-02: all three species and nine outfit combinations load and appear in the pond', async t => {
+test('UI-02: all six species and eighteen outfit combinations load and appear in the pond', async t => {
   const page = await openGame(t);
   const species = [['clown', 'Clownfish', 'small', 125],
-    ['gold', 'Goldfish', 'normal', 170], ['blue', 'Blue betta', 'large', 230]];
+    ['gold', 'Goldfish', 'normal', 170], ['blue', 'Blue betta', 'large', 230],
+    ['tang', 'Yellow tang', 'normal', 170], ['angel', 'Silver angelfish', 'large', 230],
+    ['tetra', 'Neon tetra', 'small', 125]];
   for (const [type, label, size, pixels] of species) {
     for (const outfit of ['none', 'sailor', 'scarf']) {
       await chooseFish(page, type, size, outfit);
@@ -151,7 +154,7 @@ test('UI-02: all three species and nine outfit combinations load and appear in t
       assert.equal(await page.locator('#pet-image').evaluate(image => image.complete && image.naturalWidth > 0), true);
     }
   }
-  t.diagnostic('Nine species/outfit combinations and all three size settings checked in the real page.');
+  t.diagnostic('Eighteen species/outfit combinations and all three size settings checked in the real page.');
 });
 
 test('UI-03: real photo swaps unlock a badge, while replay never duplicates food', async t => {
@@ -328,4 +331,137 @@ test('UI-10: modal keyboard focus stays inside the dialog and returns on Escape'
   await page.keyboard.press('Escape');
   await expect(page.locator('#overlay')).toBeHidden();
   await expect(opener).toBeFocused();
+});
+
+test('UI-11: demo companions are labelled, optional and saved independently from guardian names', async t => {
+  const page = await openGame(t);
+  await expect(page.locator('.demo-fish')).toHaveCount(4);
+  await expect(page.locator('#pond-population')).toHaveText('4 demo companions');
+  for (const image of await page.locator('.demo-fish img').all()) {
+    await expect(image).toHaveAttribute('alt', /^Demo companion:/);
+    assert.equal(await image.evaluate(node => node.complete && node.naturalWidth > 0), true);
+  }
+  await page.locator('[data-open="friends"]').click();
+  await expect(page.locator('#sheet-body')).toContainText('local demo characters');
+  await page.getByRole('button', { name: 'Hide companions', exact: true }).click();
+  await expect(page.locator('.demo-fish')).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator('.demo-fish')).toHaveCount(0);
+  await expect(page.locator('#friend-sub')).toHaveText('1 guardian');
+  await page.locator('[data-open="friends"]').click();
+  await page.getByRole('button', { name: 'Show companions', exact: true }).click();
+  await expect(page.locator('.demo-fish')).toHaveCount(4);
+});
+
+test('UI-12: eight real feeds grow the parent and unlock one persistent baby fish', async t => {
+  const page = await openGame(t);
+  await page.locator('[data-tab="profile"]').click();
+  await page.locator('[data-act="open-nursery"]').click();
+  await expect(page.locator('[data-act="welcome-baby"]')).toBeDisabled();
+  await expect(page.locator('#sheet-body')).toContainText('8 more feeds');
+  await closePanel(page);
+  await photoPuzzle(page);
+  await solvePhoto(page);
+  await page.locator('[data-act="reward-next"]').click();
+  await page.locator('[data-tab="games"]').click();
+  await page.locator('[data-act="open-water"]').click();
+  for (const [index, turns] of [[2, 2], [3, 1], [4, 1], [5, 3], [8, 3]]) {
+    for (let turn = 0; turn < turns; turn++) {
+      await page.locator(`[data-act="pipe"][data-index="${index}"]`).click();
+    }
+  }
+  await page.locator('[data-act="flow"]').click();
+  await page.locator('[data-act="reward-next"]').click();
+  await page.locator('.hud [data-open="food"]').click();
+  await page.locator('[data-act="gift"]').click();
+  await page.locator('[data-act="reward-next"]').click();
+  await expect(page.locator('#food')).toHaveText('9');
+  for (let count = 0; count < 7; count++) await feedOnce(page);
+  await page.locator('[data-tab="profile"]').click();
+  await page.locator('[data-act="open-nursery"]').click();
+  await expect(page.locator('[data-act="welcome-baby"]')).toBeDisabled();
+  await expect(page.locator('#sheet-body')).toContainText('1 more feed');
+  await closePanel(page);
+  await feedOnce(page);
+  await expect(page.locator('#level')).toHaveText('Lv. 3');
+  assert.ok(Math.abs(parseFloat(await page.locator('#pet').evaluate(node => getComputedStyle(node).width)) - 197.2) < .1);
+  await page.locator('[data-tab="profile"]').click();
+  await page.locator('[data-act="open-nursery"]').click();
+  await page.getByRole('button', { name: 'Welcome a baby fish', exact: true }).click();
+  await expect(page.locator('.baby-fish')).toHaveCount(1);
+  await expect(page.locator('#food')).toHaveText('1');
+  await expect(page.locator('#points')).toHaveText('80');
+  await page.reload();
+  await expect(page.locator('.baby-fish')).toHaveCount(1);
+  await chooseFish(page, 'tang', 'normal', 'none');
+  await closePanel(page);
+  await expect(page.locator('.baby-fish')).toHaveAttribute('data-species', 'clown');
+  await page.locator('[data-tab="profile"]').click();
+  await page.locator('[data-act="open-nursery"]').click();
+  await expect(page.getByRole('button', { name: 'Baby already welcomed', exact: true })).toBeDisabled();
+  await closePanel(page);
+  await page.locator('[data-tab="profile"]').click();
+  await page.locator('[data-act="open-reset"]').click();
+  await page.locator('[data-act="reset-keep"]').click();
+  await expect(page.locator('.baby-fish')).toHaveCount(0);
+  await expect(page.locator('#pet-image')).toHaveAttribute('alt', 'Yellow tang');
+  t.diagnostic('Real rewards supplied 9 food. Eight feeds reached Lv. 3; one baby persisted through reload and a parent-species change.');
+});
+
+test('UI-13: desktop edge controls reveal on hover and remain reachable by keyboard', async t => {
+  const page = await openGame(t, { pinControls: false });
+  await page.mouse.move(640, 450);
+  await expect(page.locator('#care-panel')).toBeHidden();
+  await expect(page.locator('#navigation-panel')).toBeHidden();
+  await page.locator('#care-toggle').hover();
+  await expect(page.locator('#care-panel')).toBeVisible();
+  await page.mouse.move(640, 450);
+  await expect(page.locator('#care-panel')).toBeHidden();
+  await page.locator('#navigation-toggle').hover();
+  await expect(page.locator('#navigation-panel')).toBeVisible();
+  await page.mouse.move(640, 450);
+  await expect(page.locator('#navigation-panel')).toBeHidden();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#care-toggle')).toBeFocused();
+  await expect(page.locator('#care-panel')).toBeVisible();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('.hud [data-open="records"]')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#sheet-title')).toHaveText('My water records');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.hud [data-open="records"]')).toBeFocused();
+});
+
+test('UI-14: touch handles toggle both toolbars and expose working actions at 390px', async t => {
+  const page = await openGame(t, { pinControls: false, hasTouch: true, viewport: { width: 390, height: 844 } });
+  await expect(page.locator('#care-panel')).toBeHidden();
+  await page.locator('#care-toggle').tap();
+  await expect(page.locator('#care-panel')).toBeVisible();
+  await page.locator('#feed').tap();
+  await expect(page.locator('#food')).toHaveText('2');
+  await page.locator('#care-toggle').tap();
+  await expect(page.locator('#care-panel')).toBeHidden();
+  await page.locator('#navigation-toggle').tap();
+  await expect(page.locator('#navigation-panel')).toBeVisible();
+  await page.locator('[data-tab="games"]').tap();
+  await expect(page.locator('#sheet-title')).toHaveText('Campus challenges');
+  await page.getByRole('button', { name: 'Close', exact: true }).tap();
+  await page.locator('#navigation-toggle').tap();
+  await expect(page.locator('#navigation-panel')).toBeHidden();
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+});
+
+test('UI-15: reduced-motion companions stay still and remain within the small viewport', async t => {
+  const page = await openGame(t, { viewport: { width: 320, height: 720 } });
+  await expect.poll(() => page.locator('.demo-fish').first().evaluate(node => node.style.left)).not.toBe('');
+  const boxes = await page.locator('.demo-fish').evaluateAll(nodes => nodes.map(node => {
+    const rect = node.getBoundingClientRect(); return { x: rect.x, y: rect.y, width: rect.width };
+  }));
+  await new Promise(resolve => setTimeout(resolve, 150));
+  const later = await page.locator('.demo-fish').evaluateAll(nodes => nodes.map(node => {
+    const rect = node.getBoundingClientRect(); return { x: rect.x, y: rect.y, width: rect.width };
+  }));
+  assert.deepEqual(later, boxes);
+  for (const box of boxes) assert.ok(box.x >= 0 && box.x + box.width <= 320);
 });

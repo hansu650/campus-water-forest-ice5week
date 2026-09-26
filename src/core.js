@@ -5,12 +5,15 @@ const PondCore = (() => {
   const initialTiles = [1, 0, 2, 3, 5, 4, 8, 7, 6];
   const shapes = ['c', 'c', 'c', 's', 'c', 's', 'c', 's', 's'];
 
+  const species = ['clown', 'gold', 'blue', 'tang', 'angel', 'tetra'];
+  const nurseryLevel = 3;
+
   function fresh() {
     return {
       version: 5, lang: 'en', started: false,
       food: 3, feeds: 0, collected: false,
       photoWon: false, waterWon: false, gift: false,
-      certificate: false, muted: false,
+      certificate: false, muted: false, companions: true, controlsPinned: false, babyType: null,
       keeper: 'Qin Tian', partners: '', name: 'Xiaoman',
       fishType: 'clown', fishSize: 'normal', fishWear: 'none',
       petChosen: false, tiles: [...initialTiles], moves: 0,
@@ -24,7 +27,7 @@ const PondCore = (() => {
     if (!raw || typeof raw !== 'object') return state;
 
     const flags = ['started', 'collected', 'photoWon', 'waterWon',
-      'gift', 'certificate', 'muted', 'petChosen'];
+      'gift', 'certificate', 'muted', 'petChosen', 'companions', 'controlsPinned'];
     for (const key of flags) {
       if (typeof raw[key] === 'boolean') state[key] = raw[key];
     }
@@ -34,7 +37,7 @@ const PondCore = (() => {
       }
     }
     const options = {
-      lang: ['zh', 'en'], fishType: ['clown', 'gold', 'blue'],
+      lang: ['zh', 'en'], fishType: species,
       fishSize: ['small', 'normal', 'large'],
       fishWear: ['none', 'sailor', 'scarf'], photo: ['aerial', 'walkway'],
     };
@@ -57,6 +60,7 @@ const PondCore = (() => {
       && raw.rot.every(value => Number.isInteger(value) && value >= 0 && value < 4)) {
       state.rot = [...raw.rot];
     }
+    if (species.includes(raw.babyType) && level(state) >= nurseryLevel) state.babyType = raw.babyType;
     state.partners = normalizePartners(state.partners, state.keeper);
     return state;
   }
@@ -72,6 +76,15 @@ const PondCore = (() => {
   const points = state => state.collected ? 100 : 80;
   const level = state => Math.floor((40 + state.feeds * 20) / 100) + 1;
   const xp = state => (40 + state.feeds * 20) % 100;
+
+  const growthScale = state => 1 + Math.min(3, Math.max(0, level(state) - 1)) * 0.08;
+
+  // A single saved offspring is a game milestone; it is independent of green points.
+  function welcomeBaby(state) {
+    if (level(state) < nurseryLevel || state.babyType || !species.includes(state.fishType)) return false;
+    state.babyType = state.fishType;
+    return true;
+  }
 
   function feed(state) {
     if (state.food <= 0) return false;
@@ -143,7 +156,7 @@ const PondCore = (() => {
     next.started = true;
     if (!all) {
       const appearance = ['lang', 'muted', 'keeper', 'partners', 'name',
-        'fishType', 'fishSize', 'fishWear', 'petChosen'];
+        'fishType', 'fishSize', 'fishWear', 'petChosen', 'companions', 'controlsPinned'];
       for (const key of appearance) next[key] = state[key];
     } else {
       next.lang = state.lang;
@@ -151,7 +164,7 @@ const PondCore = (() => {
     return next;
   }
 
-  return { fresh, sanitize, normalizePartners, points, level, xp, feed,
+  return { fresh, sanitize, normalizePartners, species, nurseryLevel, growthScale, welcomeBaby, points, level, xp, feed,
     collect, claimFood, award, ports, trace, swap, reset };
 })();
 

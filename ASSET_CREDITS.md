@@ -18,6 +18,12 @@ Classroom discussion photographs containing students are not included in the pub
 
 These are photo-derived game assets, not additional original photographic evidence. Attribution does not imply endorsement by the original authors.
 
+## Original illustrated species
+
+`fish-tang-*`, `fish-angel-*` and `fish-tetra-*` are original vector illustrations created for Campus Reef with Codex coding assistance. They depict Yellow tang, Silver angelfish and Neon tetra as stylised game characters. The editable SVG files are in `assets/illustrations/`; their transparent WebP renderings are in `assets/images/`. Each species has natural, sailor and scarf versions. They are game artwork rather than photographic evidence.
+
+The four swimming companions are labelled local demo characters. Baby fish reuse the selected species artwork at a smaller scale as a game growth reward. These visuals do not imply other online players, biological simulation or a shared server.
+
 ## Fonts
 
 - [Nunito](https://github.com/google/fonts/tree/main/ofl/nunito): full licence in [Nunito-OFL.txt](assets/fonts/Nunito-OFL.txt).

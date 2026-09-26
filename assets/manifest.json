@@ -15,5 +15,14 @@
   "treeA01": "team-tree-a01-display-v3.webp",
   "treeA02": "team-tree-a02-display-v3.webp",
   "treeA03": "team-tree-a03-display-v3.webp",
-  "treePlaque": "team-tree-a01-blank-plaque-v4.webp"
+  "treePlaque": "team-tree-a01-blank-plaque-v4.webp",
+  "tangfish": "fish-tang-none-v6.webp",
+  "tang_sailor": "fish-tang-sailor-v6.webp",
+  "tang_scarf": "fish-tang-scarf-v6.webp",
+  "angelfish": "fish-angel-none-v6.webp",
+  "angel_sailor": "fish-angel-sailor-v6.webp",
+  "angel_scarf": "fish-angel-scarf-v6.webp",
+  "tetrafish": "fish-tetra-none-v6.webp",
+  "tetra_sailor": "fish-tetra-sailor-v6.webp",
+  "tetra_scarf": "fish-tetra-scarf-v6.webp"
 }
