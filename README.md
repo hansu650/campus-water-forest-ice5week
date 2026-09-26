@@ -1,24 +1,24 @@
-# 滴水成林 · Campus Reef
+# Campus Reef
 
-ICE Week 5 校园可持续发展项目：照顾一条小鱼，了解用水记录，探索校园树木守护。
+An ICE Week 5 campus sustainability prototype: care for a fish, explore sample water records and preview campus tree guardianship.
 
-**[打开游戏 / Play](https://hansu650.github.io/campus-water-forest-ice5week/)**
+**[Play Campus Reef](https://hansu650.github.io/campus-water-forest-ice5week/)**
 
-这是持续迭代的课堂原型。支持中文 / English、手机和桌面，无需注册。
+This is the first online version of an evolving class project. It supports desktop and mobile browsers without registration. New saves start in English; the language control also provides Chinese for local testing, and existing saves retain their selected language.
 
-## 玩法
+## Features
 
-- 选择三种鱼、调整体型与装扮，喂食积累成长值。
-- 完成校园照片拼图与水路小游戏，首次通关获取鱼粮和徽章。
-- 查看明确标注的示例用水记录，领取一次示例绿色积分。
-- 在校园树牌预览中显示自己与伙伴的名字。
-- 通过底部任务条找到下一步；水草、圆石和沉木组成动态鱼塘背景。
+- Choose from three fish, personalise their size and outfit, and feed them to earn growth points.
+- Complete a campus photo puzzle and a pipe-connection challenge. Each first clear awards food and a badge.
+- Explore clearly labelled sample water records and collect a one-time sample green-points reward.
+- Preview your name and locally saved guardian names on a virtual campus tree plaque.
+- Follow the next-step task bar while plants, rocks and driftwood frame the pond.
 
-游戏进度保存在当前浏览器。不同设备不自动同步；线上网址与本地文件使用各自的存档。
+Progress is stored in the current browser using `localStorage`. Different devices and browsers have separate saves. The online site and a local HTML file also have separate saves. Clearing site data can remove progress; private browsing is not suitable for a lasting save.
 
-## 本地运行
+## Run locally
 
-需要 Node.js 22 或更高版本；自动部署使用 Node.js 24。没有 npm 依赖，无需运行 `npm install`。
+Use Node.js 22 or later. Deployment uses Node.js 24. There are no npm dependencies, so no installation step is needed.
 
 ```sh
 npm test
@@ -26,36 +26,38 @@ npm run build
 npm start
 ```
 
-打开 `http://127.0.0.1:57863/`。也可以直接用浏览器打开生成的 `dist/index.html`，图片、字体和代码都已内嵌。
+Open `http://127.0.0.1:57863/`, or open the generated `dist/index.html` directly. Images, fonts and code are embedded in the built HTML file.
 
-## 源码结构
+## Source structure
 
-| 路径 | 内容 |
+| Path | Purpose |
 | --- | --- |
-| `src/index.template.html` | 游戏页面骨架 |
-| `src/style.css` | 界面与响应式布局 |
-| `src/core.js` | 游戏规则、积分结算、存档清洗 |
-| `src/app.js` | 双语文案、交互、声音与动画 |
-| `src/scenery.js` | 原创水草、沉木、圆石与沙纹绘制 |
-| `assets/` | 游戏实际使用的图片、字体和资源映射 |
-| `scripts/` | 无依赖构建与本机预览 |
-| `tests/core.test.cjs` | 8项关键规则测试 |
-| `.github/workflows/pages.yml` | 检查、构建、发布 GitHub Pages |
+| `src/index.template.html` | Page structure and accessible controls |
+| `src/style.css` | Interface styles and responsive layout |
+| `src/core.js` | Game rules, rewards and saved-state validation |
+| `src/app.js` | English and Chinese interface text, interactions, sound and animation |
+| `src/scenery.js` | Original canvas plants, driftwood, stones and sand |
+| `assets/` | Image mapping, game images, fonts and font licences |
+| `scripts/` | Dependency-free build and local preview |
+| `tests/core.test.cjs` | Eight core-rule checks |
+| `.github/workflows/pages.yml` | Automated checks, build and GitHub Pages deployment |
 
-修改源码并推送到 `main` 后，GitHub Actions 会运行规则测试、构建游戏并部署。Pull Request 仅进行检查和构建。`dist/` 是生成文件，不提交到源码仓库；部署只发布构建后的网页。
+A push to `main` runs the rule checks, builds the game and deploys it. Pull requests run checks and build without deployment. Generated `dist/` files are not committed; Pages publishes the built site only.
 
-## 项目边界与素材
+## Scope and evidence
 
-用水时长、费用和积分均为演示数据，尚未接入趣智校园。时长和费用不能直接换算成节水升数；树牌是合成预览，不代表实际挂牌、正式认养或校方批准。共养目前只是在本机保存和展示姓名。
+Water durations, fees and green points are demonstration data. The game is not connected to Quzhi Campus or a server database. Durations and fees do not directly measure litres saved. Tree plaques are composite previews, not evidence of physical installation, formal adoption or school approval. Guardian names are stored locally; co-care does not synchronise across devices.
 
-本公开版本只包含游戏所需的校园景物照片；含同学人像的课堂讨论照片、原始课程文件、个人反思及账单保留在课程资料中。鱼形象包含照片经 AI 辅助去背景、姿态或换装编辑后的衍生素材。详见 [素材来源与许可](ASSET_CREDITS.md)。
+The public version includes approved campus scenery assets. Classroom portraits, original course materials, private bills and individual reflections remain outside this repository. Some fish assets were derived from photographs with AI-assisted background removal, poses or outfits. See [asset sources and licences](ASSET_CREDITS.md).
 
-界面参考 Reefy 的布局，界面、水景与游戏代码独立实现。未复制 Reefy 的游戏代码或资产。
+The interface takes layout inspiration from Reefy. The interface and water scene were independently implemented; no Reefy code or game assets were copied.
 
-## 团队
+## Team and contributions
 
-秦天（组长）、陶嘉成、王艺凯、宋沛桐、江昱辰。
+Qin Tian (Team Leader), Tao Jiacheng, Wang Yikai, Song Peitong and Jiang Yuchen.
 
-本仓库记录当前版本及其后的实际开发过程。历史迭代发生在本地，未补造历史提交。代码和部分视觉素材使用 AI 辅助制作；规则测试与界面核验属于开发者自测，不作为独立用户研究或真实节水成效。
+See [the contribution guide](CONTRIBUTING.md) for responsibilities, English submission requirements and the branch/PR workflow. The role allocation describes responsibilities, not completed contributions.
 
-仓库公开用于课程展示和评审，未额外授予整体开源许可；第三方素材各自的许可继续适用。
+The repository records the current version and subsequent real work. Earlier iterations took place locally; no historical commits have been reconstructed. Code and some visual assets were made with AI assistance. Automated rule checks and developer interface checks are not independent user studies or evidence of actual water savings.
+
+This repository is public for course presentation and review. No additional licence is granted for the project as a whole; third-party asset licences continue to apply.

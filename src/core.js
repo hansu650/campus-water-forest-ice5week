@@ -3,7 +3,7 @@
 const PondCore = (() => {
   const initialTiles = [1,0,2,3,5,4,8,7,6];
   const shapes = ['c','c','c','s','c','s','c','s','s'];
-  const fresh = () => ({version:5,lang:'zh',started:false,food:3,feeds:0,collected:false,photoWon:false,waterWon:false,gift:false,certificate:false,muted:false,keeper:'秦天',partners:'',name:'小满',fishType:'clown',fishSize:'normal',fishWear:'none',petChosen:false,tiles:[...initialTiles],moves:0,rot:[1,1,0,0,2,1,2,0,1],photo:'aerial'});
+  const fresh = () => ({version:5,lang:'en',started:false,food:3,feeds:0,collected:false,photoWon:false,waterWon:false,gift:false,certificate:false,muted:false,keeper:'Qin Tian',partners:'',name:'Xiaoman',fishType:'clown',fishSize:'normal',fishWear:'none',petChosen:false,tiles:[...initialTiles],moves:0,rot:[1,1,0,0,2,1,2,0,1],photo:'aerial'});
   function sanitize(raw) {
     const s=fresh(); if (!raw || typeof raw!=='object') return s;
     for (const key of ['started','collected','photoWon','waterWon','gift','certificate','muted','petChosen']) if (typeof raw[key]==='boolean') s[key]=raw[key];
