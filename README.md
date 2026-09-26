@@ -39,8 +39,11 @@ Open `http://127.0.0.1:57863/`, or open the generated `dist/index.html` directly
 | `src/scenery.js` | Original canvas plants, driftwood, stones and sand |
 | `assets/` | Image mapping, game images, fonts and font licences |
 | `scripts/` | Dependency-free build and local preview |
-| `tests/core.test.cjs` | Eight core-rule checks |
+| `tests/core.test.cjs` | Seventeen game-rule and regression checks |
+| `tests/browser.test.cjs` | Ten real-browser scenarios, including reloads and mobile layouts |
 | `.github/workflows/pages.yml` | Automated checks, build and GitHub Pages deployment |
+
+For the test coverage, direct commands and optional existing Playwright runtime, see [Testing Campus Reef](docs/testing.md). Rule tests use only Node built-ins; the browser suite does not install packages.
 
 A push to `main` runs the rule checks, builds the game and deploys it. Pull requests run checks and build without deployment. Generated `dist/` files are not committed; Pages publishes the built site only.
 

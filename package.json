@@ -5,7 +5,8 @@
   "description": "Campus Reef — ICE Week 5 campus sustainability game prototype",
   "engines": { "node": ">=22" },
   "scripts": {
-    "test": "node tests/core.test.cjs",
+    "test": "node --test --test-reporter=spec tests/core.test.cjs",
+    "test:browser": "node --test --test-reporter=spec tests/browser.test.cjs",
     "build": "node scripts/build.cjs",
     "start": "node scripts/serve.cjs"
   }
